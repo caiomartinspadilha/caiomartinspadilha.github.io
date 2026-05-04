@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>love-letter-site</title>
+  <meta name="description" content="A romantic mobile-friendly love letter website with an interactive question and surprise message." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      --text-3xl: clamp(2.5rem, 1rem + 4vw, 5rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem; --space-20: 5rem;
+      --color-bg: #fff8f8; --color-surface: #fffdfc; --color-surface-2: #fff3f4; --color-surface-offset: #fdecef; --color-border: #e7d5d9;
+      --color-text: #2d1f24; --color-text-muted: #7c636c; --color-text-faint: #b79ea6; --color-primary: #b94b6f; --color-primary-hover: #9e3b5d; --color-primary-highlight: #f7d9e1; --color-text-inverse: #fff8fa;
+      --shadow-sm: 0 1px 2px rgba(74, 36, 47, 0.06); --shadow-md: 0 10px 30px rgba(74, 36, 47, 0.10);
+      --radius-sm: 0.375rem; --radius-md: 0.75rem; --radius-lg: 1.25rem; --radius-full: 9999px;
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --font-display: 'Cormorant Garamond', Georgia, serif; --font-body: 'Manrope', Inter, sans-serif; --content-default: 1100px;
+    }
+    [data-theme="dark"] {
+      --color-bg: #171214; --color-surface: #20191c; --color-surface-2: #281f23; --color-surface-offset: #2f2429; --color-border: #48363e;
+      --color-text: #f5e8ec; --color-text-muted: #cfb5bd; --color-text-faint: #9c7f88; --color-primary: #f08aa9; --color-primary-hover: #ffabc2; --color-primary-highlight: #3c2830; --color-text-inverse: #23191d;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.25); --shadow-md: 0 12px 36px rgba(0,0,0,0.35);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{min-height:100vh;font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;color:var(--color-text);background:radial-gradient(circle at top left, rgba(185,75,111,0.10), transparent 30%),radial-gradient(circle at bottom right, rgba(185,75,111,0.08), transparent 30%),var(--color-bg)}
+    img,svg{display:block;max-width:100%;height:auto}
+    button,a{transition:all var(--transition-interactive)}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;cursor:pointer;border:none;background:none}
+    :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+    .skip-link{position:absolute;left:var(--space-4);top:-3rem;background:var(--color-primary);color:var(--color-text-inverse);padding:var(--space-3) var(--space-4);border-radius:var(--radius-full);z-index:30}
+    .skip-link:focus{top:var(--space-4)}
+    .container{width:min(calc(100% - 2rem),var(--content-default));margin:0 auto}
+    header{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);background:color-mix(in srgb, var(--color-bg) 78%, transparent);border-bottom:1px solid color-mix(in srgb, var(--color-text) 12%, transparent)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding:var(--space-4) 0}
+    .brand{display:inline-flex;align-items:center;gap:var(--space-3);font-weight:700}
+    .brand-mark{width:42px;height:42px;color:var(--color-primary)}
+    .nav-actions{display:flex;gap:var(--space-2);align-items:center}
+    .icon-btn,.pill-btn{min-width:44px;min-height:44px;border-radius:var(--radius-full);border:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);background:var(--color-surface);color:var(--color-text);display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);padding:0 var(--space-4);box-shadow:var(--shadow-sm)}
+    .pill-btn.primary{background:var(--color-primary);color:var(--color-text-inverse);border-color:transparent}
+    .pill-btn:hover,.icon-btn:hover{transform:translateY(-1px);background:var(--color-surface-2)}
+    .pill-btn.primary:hover{background:var(--color-primary-hover)}
+    section{padding:clamp(var(--space-12), 9vw, var(--space-20)) 0}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--space-10);align-items:center;min-height:calc(100vh - 84px)}
+    .eyebrow{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);border-radius:var(--radius-full);background:var(--color-primary-highlight);color:var(--color-primary);font-size:var(--text-sm);font-weight:700;margin-bottom:var(--space-5)}
+    h1,h2,h3{font-family:var(--font-display);line-height:1.03;letter-spacing:-0.02em}
+    h1{font-size:var(--text-3xl);max-width:10ch}
+    h2{font-size:var(--text-2xl);margin-bottom:var(--space-4)}
+    h3{font-size:var(--text-xl)}
+    .lead{max-width:58ch;color:var(--color-text-muted);margin-top:var(--space-5)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-6)}
+    .hero-card{position:relative;padding:var(--space-8);background:linear-gradient(180deg, var(--color-surface), var(--color-surface-2));border:1px solid color-mix(in srgb, var(--color-text) 12%, transparent);border-radius:28px;box-shadow:var(--shadow-md)}
+    .floating-note{position:absolute;right:-1rem;bottom:-1rem;width:min(240px,70%);background:var(--color-surface-offset);border-radius:22px;padding:var(--space-5);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);transform:rotate(-5deg)}
+    .mini-label{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em;color:var(--color-text-muted);margin-bottom:var(--space-2)}
+    .quote{font-family:var(--font-display);font-size:var(--text-xl)}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-6)}
+    .card,.question-box,.letter,.thousand-box{padding:var(--space-6);background:var(--color-surface);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+    .card p,.letter-body,.question-subtext{color:var(--color-text-muted)}
+    .timeline{display:grid;gap:var(--space-4);margin-top:var(--space-6)}
+    .timeline-item{display:grid;grid-template-columns:110px 1fr;gap:var(--space-4);align-items:start;padding:var(--space-5);background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid color-mix(in srgb, var(--color-text) 10%, transparent)}
+    .timeline-date{color:var(--color-primary);font-weight:700}
+    .letter{border-radius:32px;padding:clamp(var(--space-6),6vw,var(--space-12));box-shadow:var(--shadow-md);background:linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, white), var(--color-surface-offset))}
+    .letter-body{display:grid;gap:var(--space-4)}
+    .letter-body strong{color:var(--color-text)}
+    .question-wrap{display:grid;gap:var(--space-6)}
+    .question-box{text-align:center;padding:clamp(var(--space-6),5vw,var(--space-10))}
+    .question-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-5)}
+    .thousand-box{display:none;background:linear-gradient(180deg, var(--color-surface-offset), var(--color-surface));box-shadow:var(--shadow-md)}
+    .thousand-box.show{display:block;animation:fadeUp .5s ease}
+    .thousand-grid{margin-top:var(--space-4);display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:var(--space-2);max-height:420px;overflow:auto;padding-right:var(--space-2)}
+    .love-chip{padding:var(--space-2) var(--space-3);text-align:center;border-radius:var(--radius-full);background:var(--color-primary-highlight);color:var(--color-primary);font-size:var(--text-sm);font-weight:700}
+    .reveal-box{margin-top:var(--space-6);padding:var(--space-6);border-radius:var(--radius-lg);background:var(--color-surface);border:1px dashed color-mix(in srgb, var(--color-primary) 40%, transparent)}
+    .hidden-message{display:none;margin-top:var(--space-4);color:var(--color-text)}
+    .hidden-message.show{display:block;animation:fadeUp .5s ease}
+    .footer-note{text-align:center;color:var(--color-text-muted);padding-bottom:var(--space-12);max-width:70ch;margin:0 auto}
+    .popup{position:fixed;inset:0;display:none;place-items:center;background:rgba(20,10,14,.55);padding:var(--space-4);z-index:40}
+    .popup.show{display:grid}
+    .popup-card{width:min(100%,420px);background:var(--color-surface);color:var(--color-text);padding:var(--space-8);border-radius:24px;box-shadow:var(--shadow-md);text-align:center;border:1px solid color-mix(in srgb, var(--color-text) 12%, transparent)}
+    .popup-card p{color:var(--color-text-muted);margin-top:var(--space-3);margin-bottom:var(--space-5)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @media (max-width:860px){.hero,.grid-2{grid-template-columns:1fr}.floating-note{position:static;width:100%;margin-top:var(--space-4);transform:rotate(0)}.timeline-item{grid-template-columns:1fr}h1{max-width:12ch}.nav{align-items:flex-start;flex-direction:column}.nav-actions{width:100%;justify-content:space-between}}
+    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header>
+    <div class="container nav">
+      <div class="brand" aria-label="A love website brand">
+        <svg class="brand-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M32 54C17 45 8 35.5 8 24.5C8 16.5 14 10 21.8 10C26.8 10 30.3 12.6 32 16C33.7 12.6 37.2 10 42.2 10C50 10 56 16.5 56 24.5C56 35.5 47 45 32 54Z" stroke="currentColor" stroke-width="4" fill="currentColor" opacity="0.18"/>
+          <path d="M32 54C17 45 8 35.5 8 24.5C8 16.5 14 10 21.8 10C26.8 10 30.3 12.6 32 16C33.7 12.6 37.2 10 42.2 10C50 10 56 16.5 56 24.5C56 35.5 47 45 32 54Z" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Para meu amor</span>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch theme">☾</button>
+        <a class="pill-btn" href="#question">DÚVIDA</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+    <section>
+      <div class="container hero">
+        <div>
+          <div class="eyebrow">Feito com amor • apenas para você</div>
+          <h1>Até as pequenas coisas são mais especiais quando você está junto. 
+            </h1>
+
+
+          <!--<p class="lead">I made this page as a tiny digital love letter — a place for memories, kind words, and now a playful question that reveals something special.</p>
+          -->
+         
+          <div class="hero-actions">
+            <a class="pill-btn primary" href="#question">Eu te amo, sabia disso?
+            </a>
+            <a class="pill-btn" href="#letter"></a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="mini-label">Uma frase</div>
+          <p class="quote">“Quando o amor bate na porta é só deixar ele entrar.”</p>
+          <div class="floating-note">
+            <div class="mini-label"></div>
+            <p>O beijo tão gostoso que você me deu me fez esquecer da hora</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="question">
+      <div class="container question-wrap">
+        <div class="question-box">
+          <div class="mini-label">Dúvida</div>
+          <h2>Eu te amo, sabia?</h2>
+          <p class="question-subtext">Há apenas uma resposta correta, e o outro uma surpresa.</p>
+          <div class="question-actions">
+            <button class="pill-btn primary" id="yesBtn" type="button">Sim</button>
+            <button class="pill-btn" id="noBtn" type="button">Não</button>
+          </div>
+        </div>
+
+        <div class="thousand-box" id="thousandLoveBox" aria-live="polite">
+          <div class="mini-label">Acertou</div>
+          <h3>São apenas 1000 vezes, mas eu te amo infinito</h3>
+          <p class="question-subtext"></p>
+          <div class="thousand-grid" id="thousandGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="memories">
+      <div class="container">
+        <h2>Nosso primeiro encontro</h2>
+        <div class="grid-2">
+          <article class="card">
+            <div class="mini-label">Quattrocento</div>
+            <p>Primeira risada, primeiro carinho, e as suas primeiras rosas.</p>
+          </article>
+        </div>
+
+        <div class="timeline" aria-label="Relationship timeline">
+          <article class="timeline-item">
+            <div class="timeline-date">Dia 1</div>
+            <div><strong>Nós nos encontramos.</strong><p>Tudo fez sentido, e o quê era virtual virou real.</p></div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-date">Hoje?</div>
+            <div><strong>Você continua me escolhendo.</strong></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="letter">
+      <div class="container">
+        <div class="letter">
+          <div class="mini-label">Eu já disse algumas vezes, mas vou repetir.</div>
+          <h2>Para a pessoa que eu amo</h2>
+          <div class="letter-body">
+            <p><strong>Obrigado</strong> por ser você e iluminar minha vida sem nem precisar tentar.</p>
+            <p>Eu amo o jeito que você ri, o jeito que você ama e como você faz o futuro parecer perfeito e empolgante.</p>
+            <p>Nenhum site ou palavra pode expressar o que sinto por você completamente, mas quero deixar registrado por aqui também o quanto te amo e te lembrar sempre que tiver dúvidas.</p>
+          </div>
+          <div class="reveal-box">
+            <div class="mini-label">Só mais uma coisa</div>
+            <p>Pressione o botão quando estiver curiosa.</p>
+            <button class="pill-btn primary" type="button" id="revealBtn">Reveal surprise</button>
+            <div class="hidden-message" id="secretMessage"> Meus planos favoritos de futuro, são aqueles que você está presente  💗</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">This file is mobile-friendly, so you can publish it on GitHub Pages, Netlify, or Vercel and send her the link to open on her phone.</p>
+  </main>
+
+  <div class="popup" id="wrongPopup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="popup-card">
+      <div class="mini-label">Oops</div>
+      <h3 id="popupTitle">Errou neném 😄</h3>
+      <p>Tenta de novo, eu sei que você sabe a resposta!</p>
+      <button class="pill-btn primary" type="button" id="closePopup">Tente de novo
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const themeToggle = document.querySelector('[data-theme-toggle]');
+      let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      const syncIcon = () => { themeToggle.textContent = theme === 'dark' ? '☀' : '☾'; };
+      syncIcon();
+      themeToggle.addEventListener('click', () => {
+        theme = theme === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', theme);
+        syncIcon();
+      });
+
+      const revealBtn = document.getElementById('revealBtn');
+      const secret = document.getElementById('secretMessage');
+      revealBtn.addEventListener('click', () => {
+        secret.classList.toggle('show');
+        revealBtn.textContent = secret.classList.contains('show') ? 'Hide surprise' : 'Reveal surprise';
+      });
+
+      const yesBtn = document.getElementById('yesBtn');
+      const noBtn = document.getElementById('noBtn');
+      const thousandBox = document.getElementById('thousandLoveBox');
+      const thousandGrid = document.getElementById('thousandGrid');
+      const wrongPopup = document.getElementById('wrongPopup');
+      const closePopup = document.getElementById('closePopup');
+      let thousandBuilt = false;
+
+      function buildThousandLove() {
+        if (thousandBuilt) return;
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < 1000; i += 1) {
+          const item = document.createElement('span');
+          item.className = 'love-chip';
+          item.textContent = 'Eu te amo';
+          fragment.appendChild(item);
+        }
+        thousandGrid.appendChild(fragment);
+        thousandBuilt = true;
+      }
+
+      yesBtn.addEventListener('click', () => {
+        buildThousandLove();
+        thousandBox.classList.add('show');
+        thousandBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      noBtn.addEventListener('click', () => {
+        wrongPopup.classList.add('show');
+      });
+
+      closePopup.addEventListener('click', () => {
+        wrongPopup.classList.remove('show');
+      });
+
+      wrongPopup.addEventListener('click', (event) => {
+        if (event.target === wrongPopup) wrongPopup.classList.remove('show');
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') wrongPopup.classList.remove('show');
+      });
+    })();
+  </script>
+</body>
+</html>
